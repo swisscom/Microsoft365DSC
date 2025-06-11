@@ -793,8 +793,14 @@ function Export-TargetResource
 
     try
     {
-
-        $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar -All -ConsistencyLevel eventual -ErrorAction Stop
+        if ($Filter.Length -gt 0)
+        {
+            $groups = Get-MgGroup -Filter $Filter -Property "displayname,Id" -CountVariable CountVar -All -ConsistencyLevel eventual -ErrorAction Stop
+        }
+        else
+        {
+            $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar -All -ConsistencyLevel eventual -ErrorAction Stop
+        }
         $j = 1
         if ($groups.Length -eq 0)
         {
